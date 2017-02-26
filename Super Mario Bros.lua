@@ -51,7 +51,7 @@ while true do
 		--joypad.set(1, testCand.inputs[j]);
 
 		local onscreen_px = memory.readbyte(ONSCREEN_PX_ADDR);
-		if onscreen_px ~= lframe and memory.readbyte(PLAYER_DIRECTION_ADDR) == PL_RIGHT then
+		if onscreen_px ~= lframe then
 			xval = xval + onscreen_px;
 		end
 		gui.text(0, 15, xval);
