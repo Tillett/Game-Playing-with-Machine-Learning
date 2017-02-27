@@ -1,40 +1,41 @@
+-- Main File
+-- Info:    [here]
+-- Authors: [here]
+-- Date:    [here]
+
 require "table_utils"
 require "other_utils"
+require "candidate"
 
-math.randomseed(os.time())
+-- constant values, memory locations & other useful things
+local PLAYER_XPAGE_ADDR     = 0x071A --Player's page (screen) address
+local PLAYER_XSUBP_ADDR     = 0x071C --Player's position within page
+local PLAYER_STATE_ADDR     = 0x000E --Player's state (dead/dying)
+local PLAYER_VIEWPORT_ADDR  = 0x00B5 --Player's viewport status (falling)
+local PLAYER_DOWN_HOLE      = 3      --VP val for falling into hole
+local PLAYER_DYING_STATE    = 0x0B   --(CURRENTLY UNUSED!) State value for dying player
+local PLAYER_DEAD_STATE     = 0x06   --State value for dead player
+local TXT_INCR              = 9      --vertical px text block separation
+
+-- constant values which describe the state of the genetic algorithm
+local MAX_CANDIDATES        = 500    --Number of candidates generated
+local MAX_CONTROLS_PER_CAND = 1000   --Number of controls that each candidate has
+local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will last
+local CROSSOVER_RATE        = 0.7    --GA crossover rate
+local MUTATION_RATE         = 0.001  --GA  
+
+-- init savestate & setup rng
+math.randomseed(os.time());
 ss = savestate.create();
 savestate.save(ss);
-local PLAYER_DIRECTION_ADDR = 0x003
-local PL_LEFT               = 0
-local PL_RIGHT              = 1
-local ONSCREEN_PX_ADDR      = 0x071D
-local PLAYER_STATE_ADDR     = 0x000E
-local PLAYER_VIEWPORT_ADDR  = 0x00B5
-local PLAYER_DOWN_HOLE      = 3
-local PLAYER_DYING_STATE    = 0x0B
-local PLAYER_DEAD_STATE     = 0x06
-local FRAME_MAX_PER_CONTROL = 20
-local TXT_INCR              = 9
---local table = {}
 
-local candidate = { fitness = 0, 
-    inputs = {}, 
-    new = function (self, o)
-        o = o or {}
-        setmetatable(o, self)
-        self.__index = self
-        return o
-    end
-    }
-
-local candidates = {  } -- new list of candidates
-
-local testCand = candidate:new();
-
-for i = 1, 100 do
+--early test
+local test_cand = gen_candidate:new();
+for i = 1, MAX_CONTROLS_PER_CAND do
+    -- we generate L/R first to avoid pushing both at same time!
     local lrv = random_bool()
 
-    testCand.inputs[i] = { 
+    test_cand.inputs[i] = { 
         up      = random_bool(),
         down    = random_bool(),
         left    = lrv,
@@ -48,44 +49,40 @@ end
 
 while true do
     savestate.load(ss);
-    local lframe = 0;
-    local xval = 0;
+    local player_x_val;
     local cnt = 0;
-    local j = 1;
-    local max = FRAME_MAX_PER_CONTROL*table.getn(testCand.inputs);
+    local real_inp = 1;
+    local max = FRAME_MAX_PER_CONTROL * MAX_CONTROLS_PER_CAND
 
     for i = 1, max do
-        joypad.set(1, testCand.inputs[j]);
+        gui.text(0, TXT_INCR * 2, "Cand: 1")
 
-        local onscreen_px = memory.readbyte(ONSCREEN_PX_ADDR);
-        if onscreen_px ~= lframe then
-            xval = xval + onscreen_px;
-        end
+        joypad.set(1, test_cand.inputs[real_inp]);
 
-        gui.text(0, TXT_INCR * 2, "Best Horiz: "..xval);
+        player_x_val = memory.readbyte(PLAYER_XPAGE_ADDR)*255 + 
+                       memory.readbyte(PLAYER_XSUBP_ADDR);
+
+        gui.text(0, TXT_INCR * 3, "Best Horiz: "..player_x_val);
         
-        local pstate = memory.readbyte(PLAYER_STATE_ADDR);
-        local fstate = memory.readbyte(PLAYER_VIEWPORT_ADDR);   
-        if pstate == PLAYER_DYING_STATE or fstate >= PLAYER_DOWN_HOLE then
-            gui.text(0, TXT_INCR * 3, "DYING");
+        local p_state = memory.readbyte(PLAYER_STATE_ADDR);
+        local f_state = memory.readbyte(PLAYER_VIEWPORT_ADDR);
+
+        if p_state == PLAYER_DYING_STATE or f_state >= PLAYER_DOWN_HOLE then
+            gui.text(0, TXT_INCR * 4, "DYING");
             break
         else
-            gui.text(0, TXT_INCR * 3, "ALIVE");
+            gui.text(0, TXT_INCR * 4, "ALIVE");
         end
         
-        lframe = memory.readbyte(ONSCREEN_PX_ADDR);
-        
         tbl = joypad.get(1);
-        gui.text(0, TXT_INCR * 4, "Input: "..ctrl_tbl_btis(tbl));
-        gui.text(0, TXT_INCR * 5, "Curr Chromosome: "..j);
+        gui.text(0, TXT_INCR * 5, "Input: "..ctrl_tbl_btis(tbl));
+        gui.text(0, TXT_INCR * 6, "Curr Chromosome: "..real_inp);
 
         cnt = cnt + 1;
         if cnt == FRAME_MAX_PER_CONTROL then
             cnt = 0
-            j = j + 1
+            real_inp = real_inp + 1
         end
-
         emu.frameadvance();
-        gui.text(0, TXT_INCR * 5, j);
     end
 end
