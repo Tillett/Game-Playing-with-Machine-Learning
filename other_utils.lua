@@ -1,3 +1,8 @@
+-- Utility File
+-- Info:    [here]
+-- Authors: [here]
+-- Date:    [here]
+
 function random_bool()
 	return math.random(1, 10) > 5;
 end

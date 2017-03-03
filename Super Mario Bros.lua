@@ -13,8 +13,8 @@ local PLAYER_XSUBP_ADDR     = 0x071C --Player's position within page
 local PLAYER_STATE_ADDR     = 0x000E --Player's state (dead/dying)
 local PLAYER_VIEWPORT_ADDR  = 0x00B5 --Player's viewport status (falling)
 local PLAYER_DOWN_HOLE      = 3      --VP val for falling into hole
-local PLAYER_DYING_STATE    = 0x0B   --(CURRENTLY UNUSED!) State value for dying player
-local PLAYER_DEAD_STATE     = 0x06   --State value for dead player
+local PLAYER_DYING_STATE    = 0x0B   --State value for dying player
+local PLAYER_DEAD_STATE     = 0x06   --(CURRENTLY UNUSED!) State value for dead player
 local TXT_INCR              = 9      --vertical px text block separation
 
 -- constant values which describe the state of the genetic algorithm
@@ -22,7 +22,7 @@ local MAX_CANDIDATES        = 500    --Number of candidates generated
 local MAX_CONTROLS_PER_CAND = 1000   --Number of controls that each candidate has
 local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will last
 local CROSSOVER_RATE        = 0.7    --GA crossover rate
-local MUTATION_RATE         = 0.001  --GA  
+local MUTATION_RATE         = 0.001  --GA mutation rate
 
 -- init savestate & setup rng
 math.randomseed(os.time());
