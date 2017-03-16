@@ -3,13 +3,14 @@
 -- Authors: [here]
 -- Date:    [here]
 
-gen_candidate = { fitness = 0, 
-    inputs = {},
-    has_won = false, 
-    new = function (self, o)
-        o = o or {}
-        setmetatable(o, self)
-        self.__index = self
-        return o
-    end
-    }
+gen_candidate = { 
+	fitness = 0, 
+    has_won = false
+}
+gen_candidate.__index = gen_candidate;
+
+function gen_candidate.new()
+	local self = setmetatable({}, gen_candidate);
+	self.inputs = {};
+	return self;
+end
