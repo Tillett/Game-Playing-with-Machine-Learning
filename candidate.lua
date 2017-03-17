@@ -5,7 +5,8 @@
 
 gen_candidate = { 
 	fitness = 0, 
-    has_won = false
+    has_won = false,
+    been_modified = true
 }
 gen_candidate.__index = gen_candidate;
 

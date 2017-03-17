@@ -26,6 +26,15 @@ function deepcopy(orig)
     return copy
 end
 
+function contains_winner(table)
+    for i=1,#table do
+        if table[i].has_won then
+            return true;
+        end
+    end
+    return false;
+end
+
 function bti(bl)
     return (bl and 1) or 0
 end

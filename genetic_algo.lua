@@ -1,25 +1,29 @@
 require "candidate"
 require "other_utils"
 
-function ga_crossover(tbl, count, controls)
+function ga_crossover(tbl, count, controls, fhf, ncg)
 	-- kill worst candidate
-	table.remove(tbl, count);
+	for i=1, ncg do
+		table.remove(tbl, #tbl);
+	end
 	-- select parent candidates
-	local idx1 = gauss_rand(1, count-1, 1.2);
+	local idx1 = gauss_rand(1, #tbl, fhf);
 	print(idx1);
-	local idx2 = gauss_rand(1, count-1, 1.2);
+	local idx2 = gauss_rand(1, #tbl, fhf);
 	print(idx2);
 	-- create child
-	local child = gen_candidate:new();
-	for i = 1, controls do
-		local rval = random_bool();
-		if rval == true then
-			child.inputs[i] = deepcopy(tbl[idx1].inputs[i]);
-		else
-			child.inputs[i] = deepcopy(tbl[idx2].inputs[i]);
+	for i=1, ncg do
+		local child = gen_candidate:new();
+		for i = 1, controls do
+			local rval = random_bool();
+			if rval == true then
+				child.inputs[i] = deepcopy(tbl[idx1].inputs[i]);
+			else
+				child.inputs[i] = deepcopy(tbl[idx2].inputs[i]);
+			end
 		end
+		table.insert(tbl, 1, child);
 	end
-	tbl[count] = child;
 end
 
 function ga_mutate(tbl, count, mutation_rate)
@@ -36,7 +40,8 @@ function ga_mutate(tbl, count, mutation_rate)
 				B       = random_bool(),
 				start   = false,
 				select  = false
-			}
+				};
+				tbl[i].been_modified = true;
 			end
 		end
 	end
