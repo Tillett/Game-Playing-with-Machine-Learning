@@ -26,6 +26,12 @@ function deepcopy(orig)
     return copy
 end
 
+function tablelength(T)
+  local count = 0
+  for _ in pairs(T) do count = count + 1 end
+  return count
+end
+
 function contains_winner(table)
     for i=1,#table do
         if table[i].has_won then

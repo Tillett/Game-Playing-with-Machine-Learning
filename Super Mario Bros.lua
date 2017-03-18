@@ -24,9 +24,9 @@ local TXT_INCR              = 9      --vertical px text block separation
 local MAX_CANDIDATES        = 300    --Number of candidates generated
 local MAX_CONTROLS_PER_CAND = 1000   --Number of controls that each candidate has
 local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will last
-local FH_SELECT_FACTOR		= 1.8	 --GA crossover selection front-heaviness
+local FH_SELECT_FACTOR		= 1.2	 --GA crossover selection front-heaviness
 local NUM_CH_GEN            = 10     --number of children generated.
-local GA_MUTATION_RATE      = 0.05 --GA mutation rate
+local GA_MUTATION_RATE      = 0.08 --GA mutation rate
 
 -- init savestate & setup rng
 math.randomseed(os.time());
@@ -35,6 +35,9 @@ savestate.save(ss);
 
 --early test
 local candidates = {};
+local winning_cand = gen_candidate.new();
+file = io.open("winning_data.txt", "a");
+
 for i=1, MAX_CANDIDATES do
 	local cand = gen_candidate.new();
 	for j = 1, MAX_CONTROLS_PER_CAND do
@@ -120,4 +123,17 @@ while not contains_winner(candidates) do
 	ga_mutate(candidates, MAX_CANDIDATES, GA_MUTATION_RATE);
 end
 
+for i=1, MAX_CANDIDATES do
+	if candidates[i].has_won then
+		winning_cand = candidates[i];
+	end
+end
+
+for i=1, tablelength(winning_cand.inputs) do
+	file:write(ctrl_tbl_btis(winning_cand.inputs[i]), "\n");
+end
+
+file:close();
+	
 print("WINNER!");
+print(winning_cand.fitness);
