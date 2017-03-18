@@ -19,6 +19,9 @@ local PLAYER_DEAD_STATE     = 0x06   --(CURRENTLY UNUSED!) State value for dead 
 local PLAYER_FLOAT_STATE    = 0x001D --Used to check if player has won
 local PLAYER_FLAGPOLE       = 0x03   --Player is sliding down flagpole.
 local TXT_INCR              = 9      --vertical px text block separation
+local GAME_TIMER_ONES		= 0x07fA --Game Timer first digit
+local GAME_TIMER_TENS		= 0x07f9 --Game Timer second digit
+local GAME_TIMER_HUNDREDS	= 0x07f8 --Game Time third digit
 
 -- constant values which describe the state of the genetic algorithm
 local MAX_CANDIDATES        = 300    --Number of candidates generated
@@ -36,7 +39,6 @@ savestate.save(ss);
 --early test
 local candidates = {};
 local winning_cand = gen_candidate.new();
-file = io.open("winning_data.txt", "a");
 
 for i=1, MAX_CANDIDATES do
 	local cand = gen_candidate.new();
@@ -78,6 +80,10 @@ while not contains_winner(candidates) do
 
 				player_x_val = memory.readbyte(PLAYER_XPAGE_ADDR)*255 + 
 	                       memory.readbyte(PLAYER_XSUBP_ADDR);
+						   
+				game_time = memory.readbyte(GAME_TIMER_HUNDREDS)..
+							memory.readbyte(GAME_TIMER_TENS)..
+							memory.readbyte(GAME_TIMER_ONES);
 
 				gui.text(0, TXT_INCR * 3, "Best Horiz: "..player_x_val);
 	        
@@ -95,12 +101,14 @@ while not contains_winner(candidates) do
 				if win_state == PLAYER_FLAGPOLE then
 					gui.text(0, TXT_INCR * 4, "WINNING");
 					candidates[curr].has_won = true;
+					candidates[curr].win_time = game_time;
 					break;
 				end
 	        
 				tbl = joypad.get(1);
 				gui.text(0, TXT_INCR * 5, "Input: "..ctrl_tbl_btis(tbl));
 				gui.text(0, TXT_INCR * 6, "Curr Chromosome: "..real_inp);
+				
 
 				cnt = cnt + 1;
 				if cnt == FRAME_MAX_PER_CONTROL then
@@ -123,17 +131,16 @@ while not contains_winner(candidates) do
 	ga_mutate(candidates, MAX_CANDIDATES, GA_MUTATION_RATE);
 end
 
+print("WINNER!");
+
 for i=1, MAX_CANDIDATES do
 	if candidates[i].has_won then
 		winning_cand = candidates[i];
+		file = io.open("winning_data"..i..".txt", "w");
+			for j=1, tablelength(winning_cand.inputs) do
+				file:write(ctrl_tbl_btis(winning_cand.inputs[j]), "\n");
+			end
+		file:close();
+		print(winning_cand.win_time);
 	end
 end
-
-for i=1, tablelength(winning_cand.inputs) do
-	file:write(ctrl_tbl_btis(winning_cand.inputs[i]), "\n");
-end
-
-file:close();
-	
-print("WINNER!");
-print(winning_cand.fitness);
