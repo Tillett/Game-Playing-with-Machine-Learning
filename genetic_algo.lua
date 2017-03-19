@@ -1,28 +1,56 @@
 require "candidate"
 require "other_utils"
 
-function ga_crossover(tbl, count, controls, fhf, ncg)
-    -- kill worst candidate
-    for i=1, ncg do
-        table.remove(tbl, #tbl);
+-- function ga_crossover(tbl, count, controls, fhf, ncg)
+--     -- kill worst candidate
+--     for i=1, ncg do
+--         table.remove(tbl, #tbl);
+--     end
+--     -- select parent candidates
+--     local idx1 = gauss_rand(1, #tbl, fhf);
+--     print(idx1);
+--     local idx2 = gauss_rand(1, #tbl, fhf);
+--     print(idx2);
+--     -- create child
+--     for i=1, ncg do
+--         local child = gen_candidate:new();
+--         for i = 1, controls do
+--             local rval = random_bool();
+--             if rval == true then
+--                 child.inputs[i] = deepcopy(tbl[idx1].inputs[i]);
+--             else
+--                 child.inputs[i] = deepcopy(tbl[idx2].inputs[i]);
+--             end
+--         end
+--         table.insert(tbl, 1, child);
+--     end
+-- end
+
+function ga_crossover(tbl, topperc)
+    --extract top x perc from table
+    local top = {};
+    local top_max_ind = math.floor(topperc*(#tbl));
+    local top_max_cont = #(tbl[1].inputs);
+    for i=1, top_max_ind do
+        top[i] = gen_candidate.new();
+        for j=1, top_max_cont do
+            top[i].inputs[j] = deepcopy(tbl[i].inputs[j]);
+        end
     end
-    -- select parent candidates
-    local idx1 = gauss_rand(1, #tbl, fhf);
-    print(idx1);
-    local idx2 = gauss_rand(1, #tbl, fhf);
-    print(idx2);
-    -- create child
-    for i=1, ncg do
-        local child = gen_candidate:new();
-        for i = 1, controls do
+    --inject new generation into old table
+    local max_cont = #(tbl[1].inputs);
+    for i=1, #tbl do
+        local p1 = math.random(1,top_max_ind);
+        local p2 = math.random(1,top_max_ind);
+        for j = 1, max_cont do
             local rval = random_bool();
-            if rval == true then
-                child.inputs[i] = deepcopy(tbl[idx1].inputs[i]);
+            if rval then
+                tbl[i].inputs[j] = deepcopy(top[p1].inputs[j]);
             else
-                child.inputs[i] = deepcopy(tbl[idx2].inputs[i]);
+                tbl[i].inputs[j] = deepcopy(top[p2].inputs[j]);
             end
         end
-        table.insert(tbl, 1, child);
+        tbl[i].been_modified = true;
     end
 end
 
