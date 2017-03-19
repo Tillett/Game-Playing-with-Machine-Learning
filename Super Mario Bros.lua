@@ -24,11 +24,11 @@ local GAME_TIMER_TENS		= 0x07f9 --Game Timer second digit
 local GAME_TIMER_HUNDREDS	= 0x07f8 --Game Time third digit
 
 -- constant values which describe the state of the genetic algorithm
-local MAX_CANDIDATES        = 1000    --Number of candidates generated
+local MAX_CANDIDATES        = 300    --Number of candidates generated
 local MAX_CONTROLS_PER_CAND = 1000   --Number of controls that each candidate has
 local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will last
-local FH_SELECT_FACTOR		= 1.8	 --GA crossover selection front-heaviness
-local NUM_CH_GEN            = 20    --number of children generated.
+local FH_SELECT_FACTOR		= 1.2	 --GA crossover selection front-heaviness
+local NUM_CH_GEN            = 10    --number of children generated.
 local GA_MUTATION_RATE      = 0.002 --GA mutation rate
 
 -- init savestate & setup rng
