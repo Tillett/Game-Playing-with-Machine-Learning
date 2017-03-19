@@ -28,7 +28,7 @@ local MAX_CANDIDATES        = 300    --Number of candidates generated
 local MAX_CONTROLS_PER_CAND = 1000   --Number of controls that each candidate has
 local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will last
 local FH_SELECT_FACTOR		= 1.2	 --GA crossover selection front-heaviness
-local NUM_CH_GEN            = 10    --number of children generated.
+local NUM_CH_GEN            = 2    --number of children generated.
 local GA_MUTATION_RATE      = 0.002 --GA mutation rate
 
 -- init savestate & setup rng
@@ -36,36 +36,8 @@ math.randomseed(os.time());
 ss = savestate.create();
 savestate.save(ss);
 
-local candidates = {};
+local candidates = generate_candidates(MAX_CANDIDATES, MAX_CONTROLS_PER_CAND);
 local winning_cand = gen_candidate.new();
-
-for i=1, MAX_CANDIDATES do
-	local cand = gen_candidate.new();
-	for j = 1, MAX_CONTROLS_PER_CAND do
-		-- we generate L/R first to avoid pushing both at same time!
-		local lrv = random_bool()
-
-		cand.inputs[j] = { 
-			up      = random_bool(),
-			down    = random_bool(),
-			left    = lrv,
-			right   = not lrv,
-			A       = random_bool(),
-			B       = random_bool(),
-			start   = false,
-			select  = false
-			}
-	end
-	candidates[i] = cand;
-end
-
-
---[[ --early test
-for i=1, MAX_CANDIDATES do
-	print(ctrl_tbl_btis(candidates[i].inputs[2]));
-end
---]]
-
 
 while not contains_winner(candidates) do
 	for curr=1,MAX_CANDIDATES do
@@ -86,8 +58,8 @@ while not contains_winner(candidates) do
 						   
 
 
-				game_time = memory.readbyte(GAME_TIMER_HUNDREDS)..
-							memory.readbyte(GAME_TIMER_TENS)..
+				game_time = (memory.readbyte(GAME_TIMER_HUNDREDS) * 100) +
+							(memory.readbyte(GAME_TIMER_TENS) * 10)      +
 							memory.readbyte(GAME_TIMER_ONES);
 
 				gui.text(0, TXT_INCR * 3, "Best Horiz: "..player_x_val);
@@ -114,7 +86,6 @@ while not contains_winner(candidates) do
 				gui.text(0, TXT_INCR * 5, "Input: "..ctrl_tbl_btis(tbl));
 				gui.text(0, TXT_INCR * 6, "Curr Chromosome: "..real_inp);
 				
-
 				cnt = cnt + 1;
 				if cnt == FRAME_MAX_PER_CONTROL then
 					cnt = 0;
