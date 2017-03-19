@@ -24,19 +24,18 @@ local GAME_TIMER_TENS		= 0x07f9 --Game Timer second digit
 local GAME_TIMER_HUNDREDS	= 0x07f8 --Game Time third digit
 
 -- constant values which describe the state of the genetic algorithm
-local MAX_CANDIDATES        = 300    --Number of candidates generated
+local MAX_CANDIDATES        = 1000    --Number of candidates generated
 local MAX_CONTROLS_PER_CAND = 1000   --Number of controls that each candidate has
 local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will last
-local FH_SELECT_FACTOR		= 1.2	 --GA crossover selection front-heaviness
-local NUM_CH_GEN            = 10     --number of children generated.
-local GA_MUTATION_RATE      = 0.08 --GA mutation rate
+local FH_SELECT_FACTOR		= 1.8	 --GA crossover selection front-heaviness
+local NUM_CH_GEN            = 20    --number of children generated.
+local GA_MUTATION_RATE      = 0.002 --GA mutation rate
 
 -- init savestate & setup rng
 math.randomseed(os.time());
 ss = savestate.create();
 savestate.save(ss);
 
---early test
 local candidates = {};
 local winning_cand = gen_candidate.new();
 
@@ -60,9 +59,13 @@ for i=1, MAX_CANDIDATES do
 	candidates[i] = cand;
 end
 
+
+--[[ --early test
 for i=1, MAX_CANDIDATES do
 	print(ctrl_tbl_btis(candidates[i].inputs[2]));
 end
+--]]
+
 
 while not contains_winner(candidates) do
 	for curr=1,MAX_CANDIDATES do
@@ -81,6 +84,8 @@ while not contains_winner(candidates) do
 				player_x_val = memory.readbyte(PLAYER_XPAGE_ADDR)*255 + 
 	                       memory.readbyte(PLAYER_XSUBP_ADDR);
 						   
+
+
 				game_time = memory.readbyte(GAME_TIMER_HUNDREDS)..
 							memory.readbyte(GAME_TIMER_TENS)..
 							memory.readbyte(GAME_TIMER_ONES);
@@ -141,6 +146,6 @@ for i=1, MAX_CANDIDATES do
 				file:write(ctrl_tbl_btis(winning_cand.inputs[j]), "\n");
 			end
 		file:close();
-		print(winning_cand.win_time);
+		print("Candidate #: "..i.."  ".."Winning Time: "..winning_cand.win_time);
 	end
 end
