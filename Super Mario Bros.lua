@@ -10,6 +10,7 @@ require "genetic_algo"
 
 -- constant values, memory locations & other useful things
 local PLAYER_XPAGE_ADDR     = 0x6D --Player's page (screen) address
+local PLAYER_XPOS_ADDR     = 0x86 --Player's position on the x-axis
 local PLAYER_STATE_ADDR     = 0x000E --Player's state (dead/dying)
 local PLAYER_VIEWPORT_ADDR  = 0x00B5 --Player's viewport status (falling)
 local PLAYER_DOWN_HOLE      = 3      --VP val for falling into hole
