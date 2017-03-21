@@ -9,8 +9,7 @@ require "candidate"
 require "genetic_algo"
 
 -- constant values, memory locations & other useful things
-local PLAYER_XPAGE_ADDR     = 0x071A --Player's page (screen) address
-local PLAYER_XSUBP_ADDR     = 0x071C --Player's position within page
+local PLAYER_XPAGE_ADDR     = 0x6D --Player's page (screen) address
 local PLAYER_STATE_ADDR     = 0x000E --Player's state (dead/dying)
 local PLAYER_VIEWPORT_ADDR  = 0x00B5 --Player's viewport status (falling)
 local PLAYER_DOWN_HOLE      = 3      --VP val for falling into hole
@@ -30,7 +29,7 @@ local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will l
 --local FH_SELECT_FACTOR	= 1.2	 --GA crossover selection front-heaviness
 --local NUM_CH_GEN          = 5      --number of children generated.
 local GA_SEL_TOPPERC        = .075    --top X percent used for selection/crossover.
-local GA_MUTATION_RATE      = 0.005  --GA mutation rate
+local GA_MUTATION_RATE      = 0.008  --GA mutation rate
 
 -- init savestate & setup rng
 math.randomseed(os.time());
@@ -54,8 +53,8 @@ while not contains_winner(candidates) do
 
 				joypad.set(1, candidates[curr].inputs[real_inp]);
 
-				player_x_val = memory.readbyte(PLAYER_XPAGE_ADDR)*255 + 
-	                       memory.readbyte(PLAYER_XSUBP_ADDR);
+				player_x_val = memory.readbyte(PLAYER_XPAGE_ADDR)* 0x100 + 
+	                       memory.readbyte(PLAYER_XPOS_ADDR);
 						   
 
 
