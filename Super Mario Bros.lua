@@ -10,7 +10,8 @@ require "genetic_algo"
 
 -- constant values, memory locations & other useful things
 local PLAYER_XPAGE_ADDR     = 0x6D --Player's page (screen) address
-local PLAYER_XPOS_ADDR     = 0x86 --Player's position on the x-axis
+local PLAYER_PAGE_WIDTH     = 256  -- Width of pages
+local PLAYER_XPOS_ADDR      = 0x86 --Player's position on the x-axis
 local PLAYER_STATE_ADDR     = 0x000E --Player's state (dead/dying)
 local PLAYER_VIEWPORT_ADDR  = 0x00B5 --Player's viewport status (falling)
 local PLAYER_DOWN_HOLE      = 3      --VP val for falling into hole
@@ -18,7 +19,6 @@ local PLAYER_DYING_STATE    = 0x0B   --State value for dying player
 local PLAYER_DEAD_STATE     = 0x06   --(CURRENTLY UNUSED!) State value for dead player
 local PLAYER_FLOAT_STATE    = 0x001D --Used to check if player has won
 local PLAYER_FLAGPOLE       = 0x03   --Player is sliding down flagpole.
-local TXT_INCR              = 9      --vertical px text block separation
 local GAME_TIMER_ONES		= 0x07fA --Game Timer first digit
 local GAME_TIMER_TENS		= 0x07f9 --Game Timer second digit
 local GAME_TIMER_HUNDREDS	= 0x07f8 --Game Time third digit
@@ -50,42 +50,35 @@ while not contains_winner(candidates) do
 			local max_cont = FRAME_MAX_PER_CONTROL * MAX_CONTROLS_PER_CAND
 
 			for i = 1, max_cont do
-				gui.text(0, TXT_INCR * 2, "Cand: "..curr)
-
+                disp_text(2, "Candidate: "..curr);
 				joypad.set(1, candidates[curr].inputs[real_inp]);
 
-				player_x_val = memory.readbyte(PLAYER_XPAGE_ADDR)* 0x100 + 
-	                       memory.readbyte(PLAYER_XPOS_ADDR);
+				player_x_val = mem_read(PLAYER_XPAGE_ADDR)* 0x100 + 
+	                           mem_read(PLAYER_XPOS_ADDR);
 						   
+				game_time = (mem_read(GAME_TIMER_HUNDREDS) * 100) +
+							(mem_read(GAME_TIMER_TENS) * 10)      +
+							mem_read(GAME_TIMER_ONES);
 
-
-				game_time = (memory.readbyte(GAME_TIMER_HUNDREDS) * 100) +
-							(memory.readbyte(GAME_TIMER_TENS) * 10)      +
-							memory.readbyte(GAME_TIMER_ONES);
-
-				gui.text(0, TXT_INCR * 3, "Best Horiz: "..player_x_val);
+				disp_text(3, "Fitness: "..player_x_val);
 	        
-				local p_state = memory.readbyte(PLAYER_STATE_ADDR);
-				local f_state = memory.readbyte(PLAYER_VIEWPORT_ADDR);
+				local p_state = mem_read(PLAYER_STATE_ADDR);
+				local f_state = mem_read(PLAYER_VIEWPORT_ADDR);
 
 				if p_state == PLAYER_DYING_STATE or f_state >= PLAYER_DOWN_HOLE then
-					gui.text(0, TXT_INCR * 4, "DYING");
 					break;
-				else
-					gui.text(0, TXT_INCR * 4, "ALIVE");
 				end
 				
-				local win_state = memory.readbyte(PLAYER_FLOAT_STATE);
+				local win_state = mem_read(PLAYER_FLOAT_STATE);
 				if win_state == PLAYER_FLAGPOLE then
-					gui.text(0, TXT_INCR * 4, "WINNING");
 					candidates[curr].has_won = true;
 					candidates[curr].win_time = game_time;
 					break;
 				end
 	        
 				tbl = joypad.get(1);
-				gui.text(0, TXT_INCR * 5, "Input: "..ctrl_tbl_btis(tbl));
-				gui.text(0, TXT_INCR * 6, "Curr Chromosome: "..real_inp);
+				disp_text(4, "Input: "..ctrl_tbl_btis(tbl));
+				disp_text(5, "Curr Chromosome: "..real_inp);
 				
 				cnt = cnt + 1;
 				if cnt == FRAME_MAX_PER_CONTROL then

@@ -3,6 +3,15 @@
 -- Authors: [here]
 -- Date:    [here]
 
+function mem_read(addr)
+    return memory.readbyte(addr);
+end
+
+function disp_text(offset, text)
+    local REAL_OFF = 9;
+    gui.text(0, offset*REAL_OFF, text);
+end
+
 function random_bool()
 	return math.random(1, 10) > 5;
 end
