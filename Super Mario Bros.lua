@@ -53,7 +53,7 @@ while not contains_winner(candidates) do
                 disp_text(2, "Candidate: "..curr);
 				joypad.set(1, candidates[curr].inputs[real_inp]);
 
-				player_x_val = mem_read(PLAYER_XPAGE_ADDR)* 0x100 + 
+				player_x_val = mem_read(PLAYER_XPAGE_ADDR) * PLAYER_PAGE_WIDTH + 
 	                           mem_read(PLAYER_XPOS_ADDR);
 						   
 				game_time = (mem_read(GAME_TIMER_HUNDREDS) * 100) +
