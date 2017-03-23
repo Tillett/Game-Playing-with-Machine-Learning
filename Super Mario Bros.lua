@@ -25,7 +25,7 @@ local GAME_TIMER_HUNDREDS	= 0x07f8 --Game Time third digit
 local GAME_TIMER_MAX        = 400    --Max time allotted by game
 
 -- constant values which describe the state of the genetic algorithm
-local MAX_CANDIDATES        = 200    --Number of candidates generated
+local MAX_CANDIDATES        = 50    --Number of candidates generated
 local MAX_CONTROLS_PER_CAND = 1000   --Number of controls that each candidate has
 local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will last
 --local FH_SELECT_FACTOR	= 1.2	 --GA crossover selection front-heaviness
@@ -45,6 +45,7 @@ local winning_cand = gen_candidate.new();
 while not contains_winner(candidates) do
     for curr=1,MAX_CANDIDATES do
 		savestate.load(ss);
+        local accum = 0;
 		local player_x_val;
 		local cnt = 0;
 		local real_inp = 1;
@@ -83,7 +84,8 @@ while not contains_winner(candidates) do
 			
 			cnt = cnt + 1;
 			if cnt == FRAME_MAX_PER_CONTROL then
-                candidates[curr].input_fit[real_inp] = player_x_val;
+                candidates[curr].input_fit[real_inp] = player_x_val - accum;
+                accum = player_x_val;
 				cnt = 0;
 				real_inp = real_inp + 1;
 			end
