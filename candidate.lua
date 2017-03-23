@@ -3,7 +3,8 @@
 -- Authors: [here]
 -- Date:    [here]
 
-gen_candidate = { 
+gen_candidate = {
+    time = 0,
 	fitness = 0, 
     has_won = false,
     been_modified = true,
@@ -14,6 +15,7 @@ gen_candidate.__index = gen_candidate;
 function gen_candidate.new()
 	local self = setmetatable({}, gen_candidate);
 	self.inputs = {};
+    self.input_fit = {};
 	return self;
 end
 
@@ -23,6 +25,7 @@ function generate_candidates(num_cands, num_controls)
         local cand = gen_candidate.new();
         for j = 1, num_controls do
             cand.inputs[j] = generate_input();
+            cand.input_fit[j] = 0;
         end
     ret[i] = cand;
     end

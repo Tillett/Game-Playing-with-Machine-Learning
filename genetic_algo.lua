@@ -36,6 +36,7 @@ function ga_crossover(tbl, topperc)
         top[i] = gen_candidate.new();
         for j=1, top_max_cont do
             top[i].inputs[j] = deepcopy(tbl[i].inputs[j]);
+            top[i].input_fit = tbl[i].input_fit;
         end
     end
     --inject new generation into old table
@@ -44,14 +45,13 @@ function ga_crossover(tbl, topperc)
         local p1 = math.random(1,top_max_ind);
         local p2 = math.random(1,top_max_ind);
         for j = 1, max_cont do
-            local rval = random_bool();
-            if rval then
+            if top[p1].input_fit[j] > top[p2].input_fit[j] then
                 tbl[i].inputs[j] = deepcopy(top[p1].inputs[j]);
             else
                 tbl[i].inputs[j] = deepcopy(top[p2].inputs[j]);
             end
+            tbl[i].input_fit[j] = 0;
         end
-        tbl[i].been_modified = true;
     end
 end
 
@@ -62,7 +62,6 @@ function ga_mutate(tbl, count, mutation_rate)
         for j=1, #(tbl[i].inputs) do
             if math.random(1, rand_max) == 1 then
                 tbl[i].inputs[j] = generate_input();
-                tbl[i].been_modified = true;
             end
         end
     end
