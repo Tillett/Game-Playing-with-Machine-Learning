@@ -1,7 +1,9 @@
--- Candidate File
--- Info:    [here]
--- Authors: [here]
--- Date:    [here]
+--[[ Candidate File
+ Info:    
+ 
+ Authors: Austin Auger, Catherine Dougherty, Michael Tillett
+ Date:    2017
+--]]
 
 gen_candidate = {
     time = 0,
@@ -11,6 +13,7 @@ gen_candidate = {
 	win_time = 0
 }
 gen_candidate.__index = gen_candidate;
+
 
 function gen_candidate.new()
 	local self = setmetatable({}, gen_candidate);

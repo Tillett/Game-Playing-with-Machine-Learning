@@ -1,7 +1,9 @@
--- Utility File
--- Info:    [here]
--- Authors: [here]
--- Date:    [here]
+--[[ Utilities File
+ Info:    
+ 
+ Authors: Austin Auger, Michael Tillett
+ Date:    2017
+--]]
 
 function mem_read(addr)
     return memory.readbyte(addr);
