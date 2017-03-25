@@ -19,7 +19,8 @@ For Super Mario Bros.
 Pop the code into a folder, start up a new game and once the level starts, run the main script through FCEUX.
 You can speed up the Emulation using the Turbo function in FCEUX.
 Level 1-1 can be completed too easily just based on random chance alone, so I recommend playing up to level 1-2 and starting the script.
-As of now the Genetic Algorithm converges on a solution in around 16 generations for Level 1-2. Results may vary though.
+As of now our Genetic Algorithm converges on a solution in around 16 generations for Level 1-2. Results may vary though.
+SMB is still being tested.
 
 For Super Mario World 
 1. Bizhawk Emulator - http://tasvideos.org/BizHawk/ReleaseHistory.html
@@ -29,7 +30,8 @@ For Super Mario World
 
 Pop the code into a folder, start up a new game and once the level starts, run the main script through Bizhawk.
 You can speed up the Emulation using the Unthrottled function in Bizhawk.
-Bizhawk may be mildly unstable on some systems
-Super Mario World is currently being tested
+Bizhawk may be mildly unstable on some systems.
+As of now our Genetic Algorithm converges on a solution in only 6 generations for Level "Yoshi's island 2". Results may vary.
+Super Mario World is currently being tested.
 
 The project is ongoing and will be used with different games in time. 
