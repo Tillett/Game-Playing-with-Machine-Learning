@@ -177,10 +177,3 @@ for i=1, MAX_CANDIDATES do
 	end
 end
 
---TRASH AREA
---[[ Unused variables and function calls for previous GA method (Elitism method)
-local FH_SELECT_FACTOR	= 1.2	 --GA crossover selection front-heaviness
-local NUM_CH_GEN          = 5      --number of children generated.
-ga_crossover(candidates, MAX_CANDIDATES, MAX_CONTROLS_PER_CAND, FH_SELECT_FACTOR, NUM_CH_GEN);
-]]--
-
