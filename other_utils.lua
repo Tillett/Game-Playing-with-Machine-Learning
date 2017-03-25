@@ -15,11 +15,11 @@ function disp_text(offset, text)
 end
 
 function random_bool()
-	return math.random(1, 10) > 5;
+    return math.random(1, 10) > 5;
 end
 
 function gauss_rand(minv, maxv, fh)
-	return math.floor((minv + (maxv - minv) * math.random()^fh));
+    return math.floor((minv + (maxv - minv) * math.random()^fh));
 end
 
 function deepcopy(orig)
