@@ -59,8 +59,7 @@ local candidates = generate_candidates(MAX_CANDIDATES, MAX_CONTROLS_PER_CAND);
 local winning_cand = gen_candidate.new();
 local gen_count = 1;
 
--- The main loop that runs each generation. As long as there is no winner in the current generation, run again
-while not contains_winner(candidates) do
+while true do
 
     -- This inner loop will reset every time mario dies or times out for as many candidates are fixed in MAX_CANDIDATES
     for curr=1,MAX_CANDIDATES do
@@ -148,7 +147,10 @@ while not contains_winner(candidates) do
             emu.frameadvance();
         end
     end 
-    
+    --if we have winners, we're done!
+    if contains_winner(candidates) then
+        break;
+    end
     -- sort
     table.sort(candidates, 
         function(a, b)
@@ -204,7 +206,7 @@ while true do
                                mem_read(PLAYER_XPOS_ADDR);
 
                 disp_text(3, "Fitness: "..player_x_val);
-    
+        
                 local win_state = mem_read(PLAYER_FLOAT_STATE);
                 if win_state == PLAYER_FLAGPOLE then
                     break;
