@@ -43,7 +43,7 @@ local MAX_CANDIDATES        = 200    --Number of candidates generated
 local MAX_CONTROLS_PER_CAND = 1000   --Number of controls that each candidate has
 local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will last
 local GA_SEL_TOPPERC        = .075   --top X percent used for selection/crossover.
-local GA_MUTATION_RATE      = 0.010  --GA mutation rate
+local GA_MUTATION_RATE      = 0.009  --GA mutation rate
 local GA_XVTIME_DELTA       = 75     --Delta for time v. distance
 
 -- Creation of initial savestate which saves the moment the script is started and acts as a reset point for every condidate
@@ -188,8 +188,8 @@ for i=1, MAX_CANDIDATES do
 end
 
 while true do
-    for i=1, MAX_CANDIDATES do
-        if candidates[i].has_won then
+    for k=1, MAX_CANDIDATES do
+        if candidates[k].has_won then
             savestate.load(ss);
             local cnt = 0;
             local real_inp = 1;
@@ -197,9 +197,9 @@ while true do
         
             for i = 1, max_cont do
                 disp_text(1, "Spicy Algorithm WINNER")
-                disp_text(2, "Candidate: "..i);
+                disp_text(2, "Candidate: "..k);
                 
-                joypad.set(1, candidates[i].inputs[real_inp]);
+                joypad.set(1, candidates[k].inputs[real_inp]);
                 player_x_val = mem_read(PLAYER_XPAGE_ADDR) * PLAYER_PAGE_WIDTH + 
                                mem_read(PLAYER_XPOS_ADDR);
 
