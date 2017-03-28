@@ -11,28 +11,34 @@ require "other_utils"
 function ga_crossover(tbl, topperc)
     --extract top x perc from table
     local top = {};
-    local top_max_ind = math.floor(topperc*(#tbl));
+    local cross_perc_ind = math.floor(topperc*(#tbl));
     local top_max_cont = #(tbl[1].inputs);
-    for i=1, top_max_ind do
+    for i=1, cross_perc_ind do
         top[i] = gen_candidate.new();
         for j=1, top_max_cont do
             top[i].inputs[j] = deepcopy(tbl[i].inputs[j]);
             top[i].input_fit = tbl[i].input_fit;
         end
     end
-    --inject new generation into old table
+    --kill off bottom x perc of the worst boys
+	for i=1, cross_perc_ind do
+         table.remove(tbl, #tbl);
+    end
+	 --inject children into bottom x perc of old table
     local max_cont = #(tbl[1].inputs);
-    for i=1, #tbl do
-        local p1 = math.random(1,top_max_ind);
-        local p2 = math.random(1,top_max_ind);
+    for i=1, cross_perc_ind do
+        local p1 = math.random(1,cross_perc_ind);
+        local p2 = math.random(1,cross_perc_ind);
+		local child = gen_candidate.new();
         for j = 1, max_cont do
             if top[p1].input_fit[j] > top[p2].input_fit[j] then
-                tbl[i].inputs[j] = deepcopy(top[p1].inputs[j]);
+                child.inputs[j] = deepcopy(top[p1].inputs[j]);
             else
-                tbl[i].inputs[j] = deepcopy(top[p2].inputs[j]);
+                child.inputs[j] = deepcopy(top[p2].inputs[j]);
             end
-            tbl[i].input_fit[j] = 0;
+            child.input_fit[j] = 0;
         end
+		table.insert(tbl, 1, child);
     end
 end
 
