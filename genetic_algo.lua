@@ -26,7 +26,14 @@ function ga_crossover(tbl, topperc)
         local p1 = math.random(1,top_max_ind);
         local p2 = math.random(1,top_max_ind);
         for j = 1, max_cont do
-            if top[p1].input_fit[j] > top[p2].input_fit[j] then
+            if top[p1].input_fit[j] == top[p2].input_fit[j] then
+                local rval = random_bool();
+                if rval then
+                    tbl[i].inputs[j] = deepcopy(top[p1].inputs[j]);
+                else
+                    tbl[i].inputs[j] = deepcopy(top[p2].inputs[j]);
+                end
+            elseif top[p1].input_fit[j] > top[p2].input_fit[j] then
                 tbl[i].inputs[j] = deepcopy(top[p1].inputs[j]);
             else
                 tbl[i].inputs[j] = deepcopy(top[p2].inputs[j]);
