@@ -8,18 +8,48 @@
 require "candidate"
 require "other_utils"
 
-function ga_crossover(tbl, topperc)
-    --extract top x perc from table
-    local top = {};
-    local top_max_ind = math.floor(topperc*(#tbl));
-    local top_max_cont = #(tbl[1].inputs);
-    for i=1, top_max_ind do
-        top[i] = gen_candidate.new();
-        for j=1, top_max_cont do
-            top[i].inputs[j] = deepcopy(tbl[i].inputs[j]);
-            top[i].input_fit = tbl[i].input_fit;
+function ga_selection_best_of_copy(tbl, indices)
+    local best_fit = -1;
+    local best = nil;
+    for i=1,#indices do
+        if tbl[indices[i]].fitness > best_fit then
+            best = tbl[indices[i]];
+            best_fit = tbl[indices[i]].fitness;
         end
     end
+
+    local ret = gen_candidate.new();
+    for i=1,#(best.inputs) do
+        ret.inputs[i] = deepcopy(best.inputs[i]);
+        ret.input_fit[i] = best.input_fit[i];
+    end
+
+    return ret;
+end
+
+function ga_selection_random_indices(count, max)
+    local ret = {};
+    for i=1, count do
+        ret[i] = math.random(1, max);
+    end
+    return ret;
+end
+
+function ga_selection(tbl, num_parents, num_samples)
+    local ret = {};
+    for i=1, num_parents do
+        local random_indices = ga_selection_random_indices(num_samples, #tbl);
+        local best = ga_selection_best_of_copy(tbl, random_indices);
+        ret[i] = best;
+    end
+
+    return ret;
+end
+
+function ga_crossover(tbl, num_parents, num_samples)
+    --extract top x perc from table
+    local top = ga_selection(tbl, num_parents, num_samples);
+    local top_max_ind = #top;
     --inject new generation into old table
     local max_cont = #(tbl[1].inputs);
     for i=1, #tbl do
@@ -42,7 +72,6 @@ function ga_crossover(tbl, topperc)
         end
     end
 end
-
 
 function ga_mutate(tbl, count, mutation_rate)
     local rand_max = 1/mutation_rate;

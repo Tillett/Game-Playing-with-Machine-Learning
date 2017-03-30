@@ -42,7 +42,8 @@ local GAME_TIMER_MAX        = 400    --Max time allotted by game
 local MAX_CANDIDATES        = 300    --Number of candidates generated
 local MAX_CONTROLS_PER_CAND = 1000   --Number of controls that each candidate has
 local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will last
-local GA_SEL_TOPPERC        = .10   --top X percent used for selection/crossover.
+local GA_SEL_NUMPAR         = 30     --Number of parents (in total)
+local GA_SEL_NUMSAMP        = 30      --Number of samples for each parent run.
 local GA_MUTATION_RATE      = 0.009  --GA mutation rate
 local GA_XVTIME_DELTA       = 75     --Delta for time v. distance
 
@@ -168,7 +169,7 @@ while true do
         end);
     print(candidates[1].fitness);
     --ga_crossover
-    ga_crossover(candidates, GA_SEL_TOPPERC);
+    ga_crossover(candidates, GA_SEL_NUMPAR, GA_SEL_NUMSAMP);
     --ga_mutate
     ga_mutate(candidates, MAX_CANDIDATES, GA_MUTATION_RATE);
     
