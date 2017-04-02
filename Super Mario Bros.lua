@@ -5,7 +5,7 @@
  Things to know: 
  Generations are made up of candidates which are individual runs of mario trying to get through a level until he dies,
  runs out of time or completes the level. Candidates are made up of a string of six binary inputs that represent button presses on a controller
- (up, down, left, right, A, B). Chromosomes are made of these strings of inputs and a weight to each input(determined by fitness). The fitness 
+ (up, down, left, right, A, B). Genes are made of these strings of inputs and a weight to each input(determined by fitness). The fitness 
  value is a function of how far right on the x-axis of each level mario can get till completion. Crossover and mutation will be explained in 
  the genetic_algo.lua file.
  
@@ -43,7 +43,7 @@ local MAX_CANDIDATES        = 300    --Number of candidates generated
 local MAX_CONTROLS_PER_CAND = 1000   --Number of controls that each candidate has
 local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will last
 local GA_SEL_NUMPAR         = 30     --Number of parents (in total)
-local GA_SEL_NUMSAMP        = 30      --Number of samples for each parent run.
+local GA_SEL_NUMSAMP        = 10      --Number of samples for each parent run.
 local GA_MUTATION_RATE      = 0.009  --GA mutation rate
 local GA_XVTIME_DELTA       = 75     --Delta for time v. distance
 
@@ -57,7 +57,6 @@ savestate.save(ss);
 -- winning_cand - Creation of a variable to store the winning candidate
 -- gen_count - Counter to keep track of the current Generation (Pool of candidates)
 local candidates = generate_candidates(MAX_CANDIDATES, MAX_CONTROLS_PER_CAND);
-local winning_cand = gen_candidate.new();
 local gen_count = 1;
 
 while true do
@@ -66,11 +65,11 @@ while true do
     for curr=1,MAX_CANDIDATES do
     
         -- Load current savestate
-        -- accum - Creation of an accumulator that is used in finding the fitness from the start to the end of a input(used in weighing each chromosome)
+        -- accum - Creation of an accumulator that is used in finding the fitness from the start to the end of an input(used in weighing each gene)
         -- player_x_value - variable to store the players current x-axis position. Defined in the next loop
-        -- cnt - a counter used in switching inputs(chromosomes) using the FRAME_MAX_PER_CONTROL variable later on
-        -- real_input - counter to tell which input(chromosome) you are currently on
-        -- max_cont - how many chromosomes a candidate is alloted. Used in next loop
+        -- cnt - a counter used in switching inputs(genes) using the FRAME_MAX_PER_CONTROL variable later on
+        -- real_input - counter to tell which input(genes) you are currently on
+        -- max_cont - how many genes a candidate is alloted. Used in next loop
         savestate.load(ss);
         local accum = 0;
         local player_x_val;
@@ -131,7 +130,7 @@ while true do
             disp_text(6, "# Input: "..real_inp);
             
             -- cnt counter increasing with the frames
-            -- if statement - used to set a weight to each intput(chromosome) at the end of the 20 frame limit
+            -- if statement - used to set a weight to each intput(gene) at the end of the 20 frame limit
             cnt = cnt + 1;
             if cnt == FRAME_MAX_PER_CONTROL then
                 candidates[curr].input_fit[real_inp] = player_x_val - accum;
@@ -152,7 +151,6 @@ while true do
     if contains_winner(candidates) then
         break;
     end
-    -- sort
     table.sort(candidates, 
         function(a, b)
             if math.abs(a.fitness - b.fitness) < GA_XVTIME_DELTA then
@@ -168,27 +166,13 @@ while true do
             end
         end);
     print(candidates[1].fitness);
-    --ga_crossover
     ga_crossover(candidates, GA_SEL_NUMPAR, GA_SEL_NUMSAMP);
-    --ga_mutate
     ga_mutate(candidates, MAX_CANDIDATES, GA_MUTATION_RATE);
     
     gen_count = gen_count + 1;
 end
 
 print("WINNER!");
-
-for i=1, MAX_CANDIDATES do
-    if candidates[i].has_won then
-        winning_cand = candidates[i];
-        file = io.open("winning_data"..i..".txt", "w");
-            for j=1, tablelength(winning_cand.inputs) do
-                file:write(ctrl_tbl_btis(winning_cand.inputs[j]), "\n");
-            end
-        file:close();
-        print("Candidate #: "..i.."  ".."Winning Time: "..winning_cand.win_time);
-    end
-end
 
 while true do
     for k=1, MAX_CANDIDATES do
@@ -215,7 +199,7 @@ while true do
 
                 tbl = joypad.get(1);
                 disp_text(4, "Input: "..ctrl_tbl_btis(tbl));
-                disp_text(5, "Curr Chromosome: "..real_inp);
+                disp_text(5, "# Input: "..real_inp);
 
                 cnt = cnt + 1;
                 if cnt == FRAME_MAX_PER_CONTROL then
