@@ -5,6 +5,16 @@
  Date:    2017
 --]]
 
+function clamp(val, min, max)
+    if val < min then
+        return min;
+    end
+    if val > max then
+        return max;
+    end
+    return val;
+end
+
 function mem_read(addr)
     return memory.readbyte(addr);
 end

@@ -8,6 +8,34 @@
 require "candidate"
 require "other_utils"
 
+--hmm, this looks complicated.
+function ga_transmogrify_mutation(curr_rate, base, max_val, step_val, sample_vec, num_same, delta)
+    local ret_rate = curr_rate;
+    local same_cnt = 0;
+    --when this is called, first slot guaranteed to be filled!
+    for i=2,#sample_vec do
+        --uninitiliazed slots (early run) are set to -1, an impossible fitness value
+        print(i.. "th sample: "..sample_vec[i]);
+        if sample_vec[i] > -1 then
+            if math.abs(sample_vec[1] - sample_vec[i]) <= delta then
+                same_cnt = same_cnt + 1;
+            end
+        end
+    end
+
+    if same_cnt >= num_same then
+        ret_rate = ret_rate + step_val;
+    else
+        ret_rate = ret_rate - step_val;
+    end
+
+    print("# SAME: "..same_cnt);
+    print("ret rate: "..ret_rate);
+    ret_rate = clamp(ret_rate, base, max_val);
+
+    return ret_rate;
+end
+
 function ga_selection_best_of_copy(tbl, indices)
     local best_fit = -1;
     local best = nil;

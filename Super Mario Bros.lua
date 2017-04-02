@@ -1,4 +1,4 @@
---baseline commit
+--baseline commit for dynamic mutation
 --[[ Main Script File
  Info:    
  This is the main script that is set to run. This is where all the magic happens. This is a project to use a genetic algorithm
@@ -23,7 +23,7 @@ require "genetic_algo"
 -- Constant values, memory locations & other useful things. 
 -- Information that is stored in these variables are being pulled from specific RAM addresses of the game.
 local PLAYER_XPAGE_ADDR     = 0x6D   --Player's page (screen) address
-local PLAYER_PAGE_WIDTH     = 256    -- Width of pages
+local PLAYER_PAGE_WIDTH     = 256    --Width of pages in PX
 local PLAYER_XPOS_ADDR      = 0x86   --Player's position on the x-axis
 local PLAYER_STATE_ADDR     = 0x000E --Player's state (dead/dying)
 local PLAYER_VIEWPORT_ADDR  = 0x00B5 --Player's viewport status (falling)
@@ -43,10 +43,15 @@ local GAME_TIMER_MAX        = 400    --Max time allotted by game
 local MAX_CANDIDATES        = 300    --Number of candidates generated
 local MAX_CONTROLS_PER_CAND = 1000   --Number of controls that each candidate has
 local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will last
-local GA_SEL_NUMPAR         = 30     --Number of parents (in total)
-local GA_SEL_NUMSAMP        = 10      --Number of samples for each parent run.
-local GA_MUTATION_RATE      = 0.009  --GA mutation rate
+local GA_SEL_NUMPAR         = 30    --Number of parents (in total)
+local GA_SEL_NUMSAMP        = 20     --Number of samples for each parent run.
 local GA_XVTIME_DELTA       = 75     --Delta for time v. distance
+local GA_DYNM_BASEMUT       = 0.009  --Baseline Mutation Rate
+local GA_DYNM_MAXMUT        = 0.035  --Max Mutation Rate
+local GA_DYNM_MUTSTEP       = 0.002  --Step-rate for dynamic mutation
+local GA_DYNM_NUMSAMP       = 5      --Number of samples to use in computation
+local GA_DYNM_NUMEQ         = 4      --Number of 'equivalent' samples to trigger mut uptick
+local GA_DYNM_FDELTA        = 100    --Max fitness delta to consider 'equivalent'
 
 -- Creation of initial savestate which saves the moment the script is started and acts as a reset point for every condidate
 -- Set up for random number generation
@@ -59,6 +64,13 @@ savestate.save(ss);
 -- gen_count - Counter to keep track of the current Generation (Pool of candidates)
 local candidates = generate_candidates(MAX_CANDIDATES, MAX_CONTROLS_PER_CAND);
 local gen_count = 1;
+local mut_rate = GA_DYNM_BASEMUT;
+local mut_cnt = 1;
+local mut_arr = {};
+
+for i=1,GA_DYNM_NUMSAMP do
+    mut_arr[i] = -1;
+end
 
 while true do
 
@@ -129,7 +141,7 @@ while true do
             tbl = joypad.get(1);
             disp_text(5, "Input: "..ctrl_tbl_btis(tbl));
             disp_text(6, "# Input: "..real_inp);
-            
+            disp_text(7, "mut rate: "..mut_rate);
             -- cnt counter increasing with the frames
             -- if statement - used to set a weight to each intput(gene) at the end of the 20 frame limit
             cnt = cnt + 1;
@@ -167,8 +179,24 @@ while true do
             end
         end);
     print(candidates[1].fitness);
+
+    --insert best fitness into mut arr
+    mut_arr[mut_cnt] = candidates[1].fitness;
+    if mut_cnt == GA_DYNM_NUMSAMP then
+        mut_cnt = 0;
+    end
+    mut_cnt = mut_cnt + 1;
+
+
+    mut_rate = ga_transmogrify_mutation(mut_rate, 
+        GA_DYNM_BASEMUT,
+        GA_DYNM_MAXMUT,
+        GA_DYNM_MUTSTEP,
+        mut_arr,
+        GA_DYNM_NUMEQ,
+        GA_DYNM_FDELTA);
     ga_crossover(candidates, GA_SEL_NUMPAR, GA_SEL_NUMSAMP);
-    ga_mutate(candidates, MAX_CANDIDATES, GA_MUTATION_RATE);
+    ga_mutate(candidates, MAX_CANDIDATES, mut_rate);
     
     gen_count = gen_count + 1;
 end
