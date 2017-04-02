@@ -1,3 +1,4 @@
+--baseline commit
 --[[ Main Script File
  Info:    
  This is the main script that is set to run. This is where all the magic happens. This is a project to use a genetic algorithm
