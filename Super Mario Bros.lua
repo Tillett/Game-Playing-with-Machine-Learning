@@ -28,7 +28,7 @@ local PLAYER_STATE_ADDR     = 0x000E --Player's state (dead/dying)
 local PLAYER_VIEWPORT_ADDR  = 0x00B5 --Player's viewport status (falling)
 local PLAYER_YPOS_ADDR      = 0x00CE --Player's y position address
 local PLAYER_VPORT_HEIGHT   = 256    --raw height of viewport pages
-local PLAYER_DOWN_HOLE      = 460    --VP+ypos val for falling into hole
+local PLAYER_DOWN_HOLE      = 3    --VP+ypos val for falling into hole
 local PLAYER_DYING_STATE    = 0x0B   --State value for dying player
 local PLAYER_DEAD_STATE     = 0x06   --(CURRENTLY UNUSED!) State value for dead player
 local PLAYER_FLOAT_STATE    = 0x001D --Used to check if player has won
@@ -43,7 +43,7 @@ local MAX_CANDIDATES        = 200    --Number of candidates generated
 local MAX_CONTROLS_PER_CAND = 1000   --Number of controls that each candidate has
 local FRAME_MAX_PER_CONTROL = 20     --Number of frames that each control will last
 local GA_SEL_TOPPERC        = .075   --top X percent used for selection/crossover.
-local GA_MUTATION_RATE      = 0.009  --GA mutation rate
+local GA_MUTATION_RATE      = 0.008  --GA mutation rate
 local GA_XVTIME_DELTA       = 75     --Delta for time v. distance
 
 -- Creation of initial savestate which saves the moment the script is started and acts as a reset point for every condidate
@@ -109,7 +109,7 @@ while true do
             -- All states are pulled from RAM addresses
             -- if statement - Loop break when marios state is seen as dead or has fallin in a hole
             local p_state = mem_read(PLAYER_STATE_ADDR);
-            local f_state = (mem_read(PLAYER_VIEWPORT_ADDR) * PLAYER_VPORT_HEIGHT) + mem_read(PLAYER_YPOS_ADDR);
+            local f_state = mem_read(PLAYER_VIEWPORT_ADDR);
             if p_state == PLAYER_DYING_STATE or f_state >= PLAYER_DOWN_HOLE then
                 break;
             end
