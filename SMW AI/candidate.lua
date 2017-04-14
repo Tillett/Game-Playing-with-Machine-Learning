@@ -1,7 +1,8 @@
 --[[ Candidate File
- Info:    
+ Info: Representation of the candidates for each generation.
+	   Each candidate is represented by a random selection of binary inputs.
  
- Authors: Austin Auger, Catherine Dougherty, Michael Tillett
+ Authors: Austin Auger, Catherine Dougherty, Michael Tillett, Scott Jeffery
  Date:    2017
 --]]
 

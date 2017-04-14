@@ -9,7 +9,7 @@
  value is a function of how far right on the x-axis of each level mario can get till completion. Crossover and mutation will be explained in 
  the genetic_algo.lua file.
  
- Authors: Austin Auger, Michael Tillett, Catherine Dougherty
+ Authors: Austin Auger, Michael Tillett, Catherine Dougherty, Scott Jeffery
  Date:    2017
 --]]
 
