@@ -151,7 +151,7 @@ while true do
     if contains_winner(candidates) then
         break;
     end
-    -- sort
+    -- The sorting function is built into Lua. We sort by fitness, or by a time delta, giving a ratio of leeway around the fitness 
     table.sort(candidates, 
         function(a, b)
             if math.abs(a.fitness - b.fitness) < GA_XVTIME_DELTA then
@@ -166,17 +166,22 @@ while true do
                 return false;
             end
         end);
+	--Print the top candidate in the sorted list, was used more for testing but decided to keep it for clarity so you know how the run is going and can get an idea of how your
+    --current run is trending	
     print(candidates[1].fitness);
-    --ga_crossover
+    --ga_crossover, call to the crossover method
     ga_crossover(candidates, GA_SEL_TOPPERC);
-    --ga_mutate
+    --ga_mutate, call to the mutation method
     ga_mutate(candidates, MAX_CANDIDATES, GA_MUTATION_RATE);
     
+	--increment the generation counter
     gen_count = gen_count + 1;
 end
 
+-- Print that you have a winner
 print("WINNER!");
 
+--Write the winning inputs and other useful information about the winning candidates to a file
 for i=1, MAX_CANDIDATES do
     if candidates[i].has_won then
         winning_cand = candidates[i];
@@ -189,6 +194,7 @@ for i=1, MAX_CANDIDATES do
     end
 end
 
+--a loop to replay the top candidate in your last run. Will continue infinitely unless the script is stopped
 while true do
     for k=1, MAX_CANDIDATES do
         if candidates[k].has_won then

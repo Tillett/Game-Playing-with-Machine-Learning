@@ -8,6 +8,12 @@
 require "candidate"
 require "other_utils"
 
+--This is our crossover function. 
+--We use a selection method called Truncation selection in that, we extract the top 7.5% of candidates who were the most fit from the previous generation, 
+  -- and continually choose two of them at random to pass on their inputs to the offspring. 
+--We do this by selecting the input with the better fitness in a 1-to-1 comparison of the parallal input_fit table which holds each inputs individual weight. 
+--If they are the same, we pick one of the inputs at random.
+--When crossover is performed the children that are created replace the whole of that generation, which leaves us with a brand new generation of fit candidates with fit, or weighted inputs.
 function ga_crossover(tbl, topperc)
     --extract top x perc from table
     local top = {};
@@ -43,7 +49,8 @@ function ga_crossover(tbl, topperc)
     end
 end
 
-
+--Mutation function
+--The mutate function randomly changes a percentage of inputs for all candidates specified by the mutation rate
 function ga_mutate(tbl, count, mutation_rate)
     local rand_max = 1/mutation_rate;
     for i=1, count do
