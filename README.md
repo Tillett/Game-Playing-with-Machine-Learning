@@ -10,11 +10,11 @@ Algorithm.
 
 The information for the **Genetic Algorithm**:
 
-This method was developed from the ground up by **Austin Auger** and **Michael Tillett**
+This method was developed from the ground up by **Austin Auger** and **Michael Tillett**.
 The goal was to use a pure genetic algorithm(no use of artificial neural networks) to complete a level of Super Mario Bros. 
 The project went from using simple methods for crossover, selection, and mutation, to creating our own algorithm for the project. 
 Our algorithm was made up from hours of research into many different machine learning techniques and utilizes these ideas. 
-The algorithm is detailed in the commenting of the code(Ongoing).
+The algorithm is detailed in the commenting of the code.
 This is a fun and very engaging project that led to a much deeper understanding of learning as a whole. 
 
 Things you will need:
@@ -52,6 +52,7 @@ Information for the **NEAT Algorithm**:
 
 Information for the **A-star algorithm**:
 
+This method was developed by **Aleksandr Fritz**.
 *WIP*
 
 --------------------------------------------------------------------------------------------------------------------------------------------
