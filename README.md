@@ -8,7 +8,8 @@ Algorithm.
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 
-The information for the **Genetic Algorithm** is Below:
+The information for the **Genetic Algorithm**:
+
 This method was developed from the ground up by **Austin Auger** and **Michael Tillett**
 The goal was to use a pure genetic algorithm(no use of artificial neural networks) to complete a level of Super Mario Bros. 
 The project went from using simple methods for crossover, selection, and mutation, to creating our own algorithm for the project. 
@@ -44,13 +45,15 @@ As of now our Genetic Algorithm converges on a solution in only 6 generations fo
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 Information for the **NEAT Algorithm**:
+
 *WIP*
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 Information for the **A-star algorithm**:
+
 *WIP*
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
-###The project is ongoing and will be used with different games, different learning techniques and appreoaches, and possibly different problems in time. 
+### The project is ongoing and will be used with different games, different learning techniques and appreoaches, and possibly different problems in time. 
