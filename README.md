@@ -62,4 +62,5 @@ This method was developed by **Aleksandr Fritz**.
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
-### The project is ongoing and will be used with different games, different learning techniques and appreoaches, and possibly different problems in time. 
+### The project is ongoing and will be used with different games, different learning techniques, 
+and possibly different problem sets aside from game playing in time. 
