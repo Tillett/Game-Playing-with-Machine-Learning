@@ -10,7 +10,7 @@ Algorithm.
 
 The information for the **Genetic Algorithm**:
 
-This method was developed from the ground up by **Austin Auger** and **Michael Tillett**.
+This Algorithm was developed from the ground up by **Austin Auger** and **Michael Tillett**.
 The goal was to use a pure genetic algorithm(no use of artificial neural networks) to complete a level of Super Mario Bros. 
 The project went from using simple methods for crossover, selection, and mutation, to creating our own algorithm for the project. 
 Our algorithm was made up from hours of research into many different machine learning techniques and utilizes these ideas. 
@@ -36,6 +36,7 @@ For Super Mario World
 3. Create a savestate and name it "SS.State"
 3. The code(in folder "GA\SMW AI")
 
+SMW implementation built by **Michael Tillett**
 Pop the code into a folder, start up a new game and once the level starts, run the main script through Bizhawk.
 You can speed up the Emulation using the Unthrottled function in Bizhawk.
 Bizhawk may be mildly unstable on some systems.
@@ -46,6 +47,8 @@ As of now our Genetic Algorithm converges on a solution in only 6 generations fo
 
 Information for the **NEAT Algorithm**:
 
+This method was originally created by **SethBling** in his implementation of Mar/IO. Reworked for the FCEUX emulator by **Michael Tillett**
+
 *WIP*
 
 --------------------------------------------------------------------------------------------------------------------------------------------
@@ -53,6 +56,7 @@ Information for the **NEAT Algorithm**:
 Information for the **A-star algorithm**:
 
 This method was developed by **Aleksandr Fritz**.
+
 *WIP*
 
 --------------------------------------------------------------------------------------------------------------------------------------------
