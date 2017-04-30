@@ -37,6 +37,7 @@ For Super Mario World
 3. The code(in folder "GA\SMW AI")
 
 SMW implementation built by **Michael Tillett**
+
 Pop the code into a folder, start up a new game and once the level starts, run the main script through Bizhawk.
 You can speed up the Emulation using the Unthrottled function in Bizhawk.
 Bizhawk may be mildly unstable on some systems.
