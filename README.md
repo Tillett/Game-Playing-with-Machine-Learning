@@ -11,6 +11,7 @@ Algorithm.
 The information for the **Genetic Algorithm**:
 
 This Algorithm was developed from the ground up by **Austin Auger** and **Michael Tillett**.
+Initial setup done by **Austin Auger** and **Catherine Dougherty**.
 The goal was to use a pure genetic algorithm(no use of artificial neural networks) to complete a level of Super Mario Bros. 
 The project went from using simple methods for crossover, selection, and mutation, to creating our own algorithm for the project. 
 Our algorithm was made up from hours of research into many different machine learning techniques and utilizes these ideas. 
