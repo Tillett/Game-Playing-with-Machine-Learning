@@ -53,15 +53,6 @@ This method was originally created by **SethBling** in his implementation of Mar
 
 *WIP*
 
---------------------------------------------------------------------------------------------------------------------------------------------
-
-Information for the **A-star algorithm**:
-
-This method was developed by **Aleksandr Fritz**.
-
-*WIP*
-
---------------------------------------------------------------------------------------------------------------------------------------------
 
 ### The project is ongoing and will be used with different games, different learning techniques, 
 and possibly different problem sets aside from game playing in time. 
